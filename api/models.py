@@ -56,12 +56,15 @@ class ProductImage(models.Model):
     
 
 class ProductSize(models.Model):
-    productvariant = models.ForeignKey(ProductVariant, verbose_name=_("Variante Producto"), on_delete=models.CASCADE)
+    productvariant = models.ForeignKey(ProductVariant, verbose_name=_("Variante Producto"), related_name='productsizes', on_delete=models.CASCADE)
     size  = models.CharField(_("Talla"), max_length=50)
     stock = models.PositiveIntegerField(_("Cantidad"), default=0)
 
     class Meta:
         unique_together = [['productvariant', 'size']]
+
+    def __str__(self):
+        return f'{self.productvariant.product.name} - {self.productvariant.color} - {self.size}'
 
 
 class Order(models.Model):

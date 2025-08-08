@@ -9,14 +9,12 @@ class ProductAdmin(admin.ModelAdmin):
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
 
-
-@admin.register(ProductSize)
-class ProductSizeAdmin(admin.ModelAdmin):
-    pass
+class ProductSizeInline(admin.TabularInline):
+    model = ProductSize
 
 @admin.register(ProductVariant)
 class ProductVariantAdmin(admin.ModelAdmin):
-    inlines = [ProductImageInline]
+    inlines = [ProductImageInline, ProductSizeInline]
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):

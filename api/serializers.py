@@ -29,11 +29,12 @@ class ProductSizeSerializer(serializers.ModelSerializer):
 
 class ProductVariantSerializer(serializers.ModelSerializer):
     productimages = ProductImageSerializer(many=True)
+    productsizes = ProductSizeSerializer(many=True)
     product = ProductSerializer(read_only=True)
 
     class Meta:
         model = ProductVariant
-        fields = ["id", "product", "color", "discount", "productimages"]
+        fields = ["id", "product", "color", "discount", "productimages", "productsizes"]
 
 
 class OrderSerializer(serializers.ModelSerializer):
