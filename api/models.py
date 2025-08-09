@@ -8,8 +8,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Category(models.Model):
-    name = models.CharField(_("Categoría"), max_length=100, unique=True)
-    slug = models.SlugField(_("Slug"), unique=True)
+    name = models.CharField(_("Categoría"), max_length=100)
+    slug = models.SlugField(_("Slug"))
     subcategory_of = models.ForeignKey("api.Category", verbose_name=_("Sub categoría de"), on_delete=models.CASCADE, blank=True, null=True)
 
 
@@ -19,7 +19,7 @@ class Category(models.Model):
         super().save(*args, **kwargs)
     
     def __str__(self):
-        return self.name
+        return f'{self.name} - {self.subcategory_of.name if self.subcategory_of != None else "Principal"}'
 
 
 class Product(models.Model):
@@ -44,7 +44,7 @@ class Product(models.Model):
 class ProductVariant(models.Model):
     product = models.ForeignKey(Product, verbose_name=_("Producto"), on_delete=models.CASCADE, related_name="products")
     color = models.CharField(_("Color"), max_length=50)
-    discount = models.FloatField(_("Descuento"), validators=[MinValueValidator(0), MaxValueValidator(100)])
+    discount = models.FloatField(_("Descuento"), validators=[MinValueValidator(0), MaxValueValidator(100)],  default=0)
 
     def __str__(self):
         return f'{self.product.name} - {self.color}'
@@ -54,7 +54,9 @@ class ProductImage(models.Model):
     productvariant = models.ForeignKey(ProductVariant, verbose_name=_("Producto"), related_name='productimages', on_delete=models.CASCADE)
     image = models.ImageField(_("Imagen"), upload_to='media/products/')
     
-
+    def __str__(self):
+        return f'{self.image.url}'
+    
 class ProductSize(models.Model):
     productvariant = models.ForeignKey(ProductVariant, verbose_name=_("Variante Producto"), related_name='productsizes', on_delete=models.CASCADE)
     size  = models.CharField(_("Talla"), max_length=50)
